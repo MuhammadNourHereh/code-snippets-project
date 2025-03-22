@@ -3,7 +3,7 @@ import './index.css'
 
 const SideBar = () => {
   return (
-    <div>SideBar</div>
+    <aside>SideBar</aside>
   )
 }
 
