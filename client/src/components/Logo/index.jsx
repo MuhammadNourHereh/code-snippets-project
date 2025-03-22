@@ -3,7 +3,9 @@ import './index.css'
 
 const Logo = () => {
   return (
-    <div>Logo</div>
+    <div className='center logo'>
+      <img src='/logo.svg' alt='Logo' />
+    </div>
   )
 }
 

@@ -6,7 +6,7 @@ import Logo from '../Logo'
 
 const Nav = () => {
   return (
-    <nav>Nav
+    <nav>
       <Logo />
       <SearchBar />
       <ProfileIcon />

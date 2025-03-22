@@ -1,0 +1,7 @@
+.pictureLogo {
+    background-color: aqua;
+    border-radius: 100px;
+    width: 42px;
+    height: 42px;
+    user-select: none;
+}

@@ -3,7 +3,9 @@ import './index.css'
 
 const ProfileIcon = () => {
   return (
-    <div>ProfileIcon</div>
+    <div className='pictureLogo center'>
+      M
+    </div>
   )
 }
 
