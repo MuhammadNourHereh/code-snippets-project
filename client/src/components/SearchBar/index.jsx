@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 
 const SearchBar = () => {
   return (
-    <div className='searchBar'>
+    <div className='searchBar center'>
       <input />
       <Search />
     </div>
