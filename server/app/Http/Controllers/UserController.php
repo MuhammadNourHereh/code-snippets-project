@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -97,5 +98,41 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(["msg" => "User deleted successfully"]);
+    }
+
+    function login(Request $request)
+    {
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string',
+            'password' => 'required|string|min:6',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                "msg" => "missing attr",
+                "errors" => $validator->errors()
+            ], 422);
+        }
+        $credentials = [
+            "username" => $request["username"],
+            "password" => $request["password"]
+        ];
+
+        if (! $token = Auth::attempt($credentials)) {
+            return response()->json([
+                "success" => false,
+                "error" => "Unauthorized"
+            ], 401);
+        }
+
+        $user = Auth::user();
+        $user->token = $token;
+
+        return response()->json([
+            "success" => true,
+            "user" => $user
+        ]);
     }
 }
