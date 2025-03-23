@@ -1,36 +1,34 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './index.css'
 import UserInput from '../../components/UserInput'
-import { request } from '../../utils/remote/request'
 import { AppContext } from '../../contexts/AppContext'
 const Login = () => {
 
-    const { login, navigate } = useContext(AppContext)
+    const { login, navigate, HomeRedirectIfNeeded, syncToken, token } = useContext(AppContext)
     useEffect(() => {
-        if (localStorage.getItem("user") != null) {
-            login()
-            navigate("/");
-        }
-    }, [navigate])
+        syncToken()
+    }, [])
+    useEffect(() => {
+        HomeRedirectIfNeeded()
+    }, [token])
+
+
 
     const [inputUsername, setInputUsername] = useState("")
     const [inputPassword, setInputPassword] = useState("")
     const submit = async () => {
-        const res = await request('post', 'login', { "username": inputUsername, "password": inputPassword })
-        localStorage.setItem("user", JSON.stringify(res))
-        login()
-        navigate("/")
+        await login(inputUsername, inputPassword)
     }
-    const handlelogin = () => {
+    const navigateToSignup = () => {
         navigate("/signup")
     }
     return (
         <div className='center page'>
             <div className='flex-column'>
                 <UserInput inputName='username' setState={setInputUsername} />
-                <UserInput inputName='password' setState={setInputPassword} inputType='password'/>
+                <UserInput inputName='password' setState={setInputPassword} inputType='password' />
                 <button className='marign' onClick={submit}>submit</button>
-                <p>don't have an account yet? <span className='signup' onClick={handlelogin}>Signup</span></p>
+                <p>don't have an account yet? <span className='signup' onClick={navigateToSignup}>Signup</span></p>
             </div>
         </div>
     )

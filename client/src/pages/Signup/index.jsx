@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './index.css'
 import UserInput from '../../components/UserInput'
-import { useNavigate } from "react-router"
-import { request } from '../../utils/remote/request'
+import { AppContext } from '../../contexts/AppContext'
 
 const Signup = () => {
 
-  const navigate = useNavigate()
+  const { navigate, HomeRedirectIfNeeded, token, syncToken } = useContext(AppContext)
 
   useEffect(() => {
-    if (localStorage.getItem("user") != null) {
-      navigate("/login");
-    }
-  }, [navigate])
+    syncToken()
+  }, [])
+  useEffect(() => {
+    HomeRedirectIfNeeded()
+  }, [token])
 
-  const handleLogin = () => {
+
+  const navigateToLogin = () => {
     navigate('/login')
   }
 
@@ -25,10 +26,12 @@ const Signup = () => {
   const [lastname, setLastname] = useState("")
 
   const signup = async () => {
+    if (password !== repassword) {
+      console.log("repassword and password don't match")
+      return
+    }
 
-    const form = { username, password, firstname, lastname }
-
-    const res = await request('post', 'signup', form)
+    const res = await remote.signup(username, firstname, lastname, password)
     navigate("/login")
   }
 
@@ -39,10 +42,10 @@ const Signup = () => {
         <UserInput inputName='username' setState={setUsername} />
         <UserInput inputName='firstname' setState={setFirstname} />
         <UserInput inputName='lastname' setState={setLastname} />
-        <UserInput inputName='password' setState={setPassword} inputType='password'/>
-        <UserInput inputName='re-password' setState={setRepassword}inputType='password'/>
+        <UserInput inputName='password' setState={setPassword} inputType='password' />
+        <UserInput inputName='re-password' setState={setRepassword} inputType='password' />
         <button className='marign' onClick={signup}>signup</button>
-        <p>already have an account? <span className='login' onClick={handleLogin}>login</span></p>
+        <p>already have an account? <span className='login' onClick={navigateToLogin}>login</span></p>
       </div>
     </div>
   )
