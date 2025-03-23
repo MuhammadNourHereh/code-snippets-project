@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+
+
 class UserController extends Controller
 {
-
     public function all()
     {
         $users = User::all();
@@ -115,6 +116,7 @@ class UserController extends Controller
                 "errors" => $validator->errors()
             ], 422);
         }
+        // login
         $credentials = [
             "username" => $request["username"],
             "password" => $request["password"]
@@ -133,6 +135,25 @@ class UserController extends Controller
         return response()->json([
             "success" => true,
             "user" => $user
+        ]);
+    }
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully logged out',
+        ]);
+    }
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
         ]);
     }
 }

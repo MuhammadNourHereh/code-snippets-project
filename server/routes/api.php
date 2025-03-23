@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SnippetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -32,15 +33,15 @@ Route::group(["prefix" => "v0.1"], function () {
     //         Route::get('/dashboard', [DashboardController::class, "dashboard"]);
     //     });
 
-    //     //User Routes
-    //     Route::group(["prefix" => "user"], function(){
-    //             Route::post('/add_update_question/{id?}', [QuestionController::class, "addOrUpdateQuestion"]);
+        //User Routes
+        Route::group(["prefix" => "user"], function(){
+                Route::post('/add_update_question/{id?}', [UserController::class, "addOrUpdateQuestion"]);
                 
-    //             //Admin Routes (Authorization)
-    //             Route::group(["middleware" => "manager"], function(){ //middleware needs to be defined
-    //                 Route::post('/delete_question/{id}', [QuestionController::class, "deleteQuestion"]);
-    //             });
-    //     });
+                //Admin Routes (Authorization)
+                Route::group(["middleware" => "manager"], function(){ //middleware needs to be defined
+                    Route::post('/delete_question/{id}', [UserController::class, "deleteQuestion"]);
+                });
+        });
 
     //     //Common Routes
     //     Route::post('/edit_profile', [AuthController::class, "editProfile"]);
@@ -51,8 +52,17 @@ Route::group(["prefix" => "v0.1"], function () {
     // //Unauthenticated Routes
     // Route::group(["prefix" => "guest"], function () {
         Route::post('/login', [UserController::class, "login"]);
+        Route::post('/logout', [UserController::class, "logout"]);
     //     Route::post('/signup', [AuthController::class, "signup"]);
-    //     Route::get('/questions/{count}/{page}/{id?}', [QuestionController::class, "getQuestions"])->name("get-questions");
-    //     Route::get('/test', [QuestionController::class, "test2"]);
     // });
+
+
+
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/snippets', [SnippetController::class, 'index']);   // Get all snippets
+        Route::post('/snippets', [SnippetController::class, 'store']);  // Create a new snippet
+        Route::get('/snippets/{id}', [SnippetController::class, 'show']); // Get a specific snippet
+        Route::put('/snippets/{id}', [SnippetController::class, 'update']); // Update a snippet
+        Route::delete('/snippets/{id}', [SnippetController::class, 'destroy']); // Delete a snippet
+    });
 });
